@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nikesha_ui_app/pages/home_page_carousel.dart';
 import 'pages/cart_details.dart';
 import 'package:nikesha_ui_app/pages/order_details.dart';
 
@@ -51,6 +52,6 @@ class _MyHomePageState extends State<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
-    return OrderDetail();
+    return HomePageCarousel();
   }
 }
