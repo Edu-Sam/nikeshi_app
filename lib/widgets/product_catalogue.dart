@@ -4,28 +4,12 @@ import 'package:nikesha_ui_app/sale_chevron.dart';
 import 'package:nikesha_ui_app/pages/order_details.dart';
 class ProductCatalogue extends StatelessWidget{
   String product_header;
-  ProductCatalogue({Key key,@required this.product_header}):super(key:key);
+  String product_detail;
+  ProductCatalogue({Key key,@required this.product_header,@required this.product_detail}):super(key:key);
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(bottom: 10.0,left: 10.0,right: 10.0),
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).orientation==Orientation.portrait ?
-                MediaQuery.of(context).size.height * 2/5 :
-                MediaQuery.of(context).size.width * 2/5,
-        decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.all(Radius.circular(5.0)),
-            boxShadow: [
-              BoxShadow(
-                offset: const Offset(1.0,1.0),
-                blurRadius: 1.0,
-                spreadRadius: 1.0,
-                color: Colors.black12,
-              ),
-            ]
-        ),
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 0.0,horizontal: 0.0),
           child: Column(
@@ -33,12 +17,21 @@ class ProductCatalogue extends StatelessWidget{
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 10.0,horizontal: 10.0),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Padding(
                       padding: EdgeInsets.symmetric(vertical: 0.0,horizontal: 0.0),
                       child: Text(
                         product_header,style: TextStyle(fontFamily: 'Open Sans',
                           fontWeight: FontWeight.w500,fontSize: 15,color: Colors.black54
+                      ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 0.0,horizontal: 0.0),
+                      child: Text(
+                        product_detail,style: TextStyle(fontFamily: 'Open Sans',
+                          fontWeight: FontWeight.w500,fontSize: 12,color: Colors.black54
                       ),
                       ),
                     ),
@@ -179,7 +172,6 @@ class ProductCatalogue extends StatelessWidget{
             ],
           ),
         ),
-      ),
     );
   }
 }

@@ -392,9 +392,65 @@ class OrderDetailState extends State<OrderDetail>{
                 ),
                 ),
               ),
-              ProductCatalogue(product_header: 'Similar Products'),
-              ProductCatalogue(product_header: 'Most Sold Items'),
-              ProductCatalogue(product_header: 'Frequently Bought Together'),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).orientation==Orientation.portrait ?
+                MediaQuery.of(context).size.height * 2/5 :
+                MediaQuery.of(context).size.width * 2/5,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                    boxShadow: [
+                      BoxShadow(
+                        offset: const Offset(1.0,1.0),
+                        blurRadius: 1.0,
+                        spreadRadius: 1.0,
+                        color: Colors.black12,
+                      ),
+                    ]
+                ),
+                child: ProductCatalogue(product_header: 'Similar Products',product_detail: '',),
+              ),
+              Container(width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).orientation==Orientation.portrait ?
+                MediaQuery.of(context).size.height * 2/5 :
+                MediaQuery.of(context).size.width * 2/5,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                    boxShadow: [
+                      BoxShadow(
+                        offset: const Offset(1.0,1.0),
+                        blurRadius: 1.0,
+                        spreadRadius: 1.0,
+                        color: Colors.black12,
+                      ),
+                    ]
+                ),
+                child:ProductCatalogue(product_header: 'Most Sold Items',product_detail: '',),
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).orientation==Orientation.portrait ?
+                MediaQuery.of(context).size.height * 2/5 :
+                MediaQuery.of(context).size.width * 2/5,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                    boxShadow: [
+                      BoxShadow(
+                        offset: const Offset(1.0,1.0),
+                        blurRadius: 1.0,
+                        spreadRadius: 1.0,
+                        color: Colors.black12,
+                      ),
+                    ]
+                ),
+                child: ProductCatalogue(product_header: 'Frequently Bought Together',product_detail: '',),
+              ),
+
+
+
               Footer()
             ],
           ),
