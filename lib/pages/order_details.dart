@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:nikesha_ui_app/widgets/product_catalogue.dart';
-import 'package:nikesha_ui_app/widgets/footer.dart';
+import 'package:nikeshi/widgets/product_catalogue.dart';
+import 'package:nikeshi/widgets/footer.dart';
 
 class OrderDetail extends StatefulWidget{
      OrderDetail({Key key}):super(key:key);
@@ -395,8 +395,8 @@ class OrderDetailState extends State<OrderDetail>{
               Container(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).orientation==Orientation.portrait ?
-                MediaQuery.of(context).size.height * 2/5 :
-                MediaQuery.of(context).size.width * 2/5,
+                MediaQuery.of(context).size.height * 6/11 :
+                MediaQuery.of(context).size.width * 6/11,
                 decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.all(Radius.circular(5.0)),
@@ -413,8 +413,8 @@ class OrderDetailState extends State<OrderDetail>{
               ),
               Container(width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).orientation==Orientation.portrait ?
-                MediaQuery.of(context).size.height * 2/5 :
-                MediaQuery.of(context).size.width * 2/5,
+                MediaQuery.of(context).size.height * 6/11 :
+                MediaQuery.of(context).size.width * 6/11,
                 decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.all(Radius.circular(5.0)),
@@ -432,8 +432,8 @@ class OrderDetailState extends State<OrderDetail>{
               Container(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).orientation==Orientation.portrait ?
-                MediaQuery.of(context).size.height * 2/5 :
-                MediaQuery.of(context).size.width * 2/5,
+                MediaQuery.of(context).size.height * 6/11 :
+                MediaQuery.of(context).size.width * 6/11,
                 decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.all(Radius.circular(5.0)),

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:nikesha_ui_app/widgets/custom_carousels.dart';
+import 'package:nikeshi/widgets/custom_carousels.dart';
 import'package:carousel_slider/carousel_slider.dart';
 import 'package:sliver_tools/sliver_tools.dart';
-import 'package:nikesha_ui_app/widgets/product_catalogue.dart';
-import 'package:nikesha_ui_app/pages/cart_details.dart';
-import 'package:nikesha_ui_app/widgets/footer.dart';
-import 'package:nikesha_ui_app/widgets/categories_view.dart';
+import 'package:nikeshi/widgets/product_catalogue.dart';
+import 'package:nikeshi/pages/cart_details.dart';
+import 'package:nikeshi/widgets/footer.dart';
+import 'package:nikeshi/widgets/categories_view.dart';
+import 'package:nikeshi/widgets/drawers/home_drawer.dart';
 class  HomePageCarousel extends StatefulWidget {
   HomePageCarousel({Key key, this.title}) : super(key: key);
 
@@ -59,9 +60,7 @@ class HomePageState extends State<HomePageCarousel> with SingleTickerProviderSta
         ),
       ),
 
-    drawer: Drawer(
-
-    ),
+    drawer: HomeDrawer(),
     //.  backgroundColor: Colors.white,
       body:Container(
         height: MediaQuery.of(context).size.height,
@@ -74,8 +73,8 @@ class HomePageState extends State<HomePageCarousel> with SingleTickerProviderSta
               color: Colors.white,
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).orientation==Orientation.portrait ?
-              MediaQuery.of(context).size.height * 2/5 :
-              MediaQuery.of(context).size.width * 2/5,
+              MediaQuery.of(context).size.height * 6/11 :
+              MediaQuery.of(context).size.width * 6/11,
               child: ProductCatalogue(product_header:'metro post',product_detail: '',),
             ),
             Padding(
@@ -106,8 +105,8 @@ class HomePageState extends State<HomePageCarousel> with SingleTickerProviderSta
               color: Colors.white,
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).orientation==Orientation.portrait ?
-              MediaQuery.of(context).size.height * 2/5 :
-              MediaQuery.of(context).size.width * 2/5,
+              MediaQuery.of(context).size.height * 6/11 :
+              MediaQuery.of(context).size.width * 6/11,
               child: ProductCatalogue(product_header:'Metro Post',product_detail: 'View all',),
             ),
 
@@ -116,16 +115,16 @@ class HomePageState extends State<HomePageCarousel> with SingleTickerProviderSta
               color: Colors.white,
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).orientation==Orientation.portrait ?
-              MediaQuery.of(context).size.height * 2/5 :
-              MediaQuery.of(context).size.width * 2/5,
+              MediaQuery.of(context).size.height * 6/11 :
+              MediaQuery.of(context).size.width * 6/11,
               child: ProductCatalogue(product_header:'Fruits and Vegetables',product_detail:'View all'),
             ),
             Container(
               color: Colors.white,
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).orientation==Orientation.portrait ?
-              MediaQuery.of(context).size.height * 2/5 :
-              MediaQuery.of(context).size.width * 2/5,
+              MediaQuery.of(context).size.height * 6/11 :
+              MediaQuery.of(context).size.width * 6/11,
               child: ProductCatalogue(product_header:'Skin Care',product_detail:'view all'),
             ),
 

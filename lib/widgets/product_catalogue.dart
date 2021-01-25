@@ -1,7 +1,8 @@
-
 import 'package:flutter/material.dart';
-import 'package:nikesha_ui_app/sale_chevron.dart';
-import 'package:nikesha_ui_app/pages/order_details.dart';
+import 'package:nikeshi/widgets/sale_chevron.dart';
+import 'package:nikeshi/pages/order_details.dart';
+import 'offer_container.dart';
+import 'sold_out_container.dart';
 class ProductCatalogue extends StatelessWidget{
   String product_header;
   String product_detail;
@@ -46,9 +47,9 @@ class ProductCatalogue extends StatelessWidget{
                 child: Container(
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).orientation==Orientation.portrait ?
-                  MediaQuery.of(context).size.height * 2/7 :
-                  MediaQuery.of(context).size.width * 2/7,
-                  //    color: Colors.red,
+                  MediaQuery.of(context).size.height * 2/5 :
+                  MediaQuery.of(context).size.width * 2/5,
+                   //   color: Colors.red,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
                     itemCount: 5,
@@ -61,8 +62,8 @@ class ProductCatalogue extends StatelessWidget{
                           //             color: Colors.red,
                           width: MediaQuery.of(context).size.width * 1/2,
                           height: MediaQuery.of(context).orientation==Orientation.portrait ?
-                          MediaQuery.of(context).size.height *1/4 :
-                          MediaQuery.of(context).size.width * 1/4,
+                          MediaQuery.of(context).size.height *2/6 :
+                          MediaQuery.of(context).size.width * 2/6,
                           //    color: Colors.black,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -108,12 +109,16 @@ class ProductCatalogue extends StatelessWidget{
                                   child: Container(
                                     width:MediaQuery.of(context).size.width * 2/7,
                                     height: MediaQuery.of(context).orientation==Orientation.portrait ?
-                                    MediaQuery.of(context).size.height * 1/8 :
-                                    MediaQuery.of(context).size.width * 1/8,
+                                    MediaQuery.of(context).size.height * 1/5 :
+                                    MediaQuery.of(context).size.width * 1/5,
                                     child: Column(
                                       mainAxisAlignment: MainAxisAlignment.start,
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
+                                        Padding(
+                                          padding: EdgeInsets.symmetric(vertical: 5.0,horizontal: 0.0),
+                                          child: OfferContainer(),
+                                        ),
                                         Padding(
                                           padding: EdgeInsets.symmetric(vertical: 5.0,horizontal: 0.0),
                                           child: Wrap(

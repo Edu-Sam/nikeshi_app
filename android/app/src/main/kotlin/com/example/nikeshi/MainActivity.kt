@@ -1,4 +1,4 @@
-package com.example.nikesha_ui_app
+package com.example.nikeshi
 
 import io.flutter.embedding.android.FlutterActivity
 

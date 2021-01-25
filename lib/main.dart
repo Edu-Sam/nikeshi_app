@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:nikesha_ui_app/pages/home_page_carousel.dart';
-import 'pages/cart_details.dart';
-import 'package:nikesha_ui_app/pages/order_details.dart';
+import 'package:provider/provider.dart';
+import 'package:nikeshi/pages/home_page_carousel.dart';
+import 'app_utils/app_utils.dart';
+import 'package:nikeshi/pages/categories_expanded_view.dart';
+import 'pages/pages.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(
+    MultiProvider(providers: [
+      ChangeNotifierProvider.value(value: AppState(),)
+    ],
+    child: MyApp()
+    )
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -12,14 +20,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-
-        primarySwatch: Colors.blue,
-        canvasColor: Color.fromRGBO(238,238,239,1)
-      ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
-    );
+        title: 'Nikeshi Mini Market',
+        theme: ThemeData(
+          primaryColor: Colors.blue,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+        ),
+        home: MyHomePage());
   }
 }
 
@@ -53,5 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return HomePageCarousel();
+
   }
 }
+
