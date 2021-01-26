@@ -3,6 +3,7 @@ import 'package:nikeshi/widgets/sale_chevron.dart';
 import 'package:nikeshi/pages/order_details.dart';
 import 'offer_container.dart';
 import 'sold_out_container.dart';
+import 'package:nikeshi/widgets/sub_categories.dart';
 class ProductCatalogue extends StatelessWidget{
   String product_header;
   String product_detail;
@@ -28,15 +29,19 @@ class ProductCatalogue extends StatelessWidget{
                       ),
                       ),
                     ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 0.0,horizontal: 0.0),
-                      child: Text(
-                        product_detail,style: TextStyle(fontFamily: 'Open Sans',
-                          fontWeight: FontWeight.w500,fontSize: 12,color: Colors.black54
+                    GestureDetector(
+                      onTap: (){
+                       Navigator.push(context,MaterialPageRoute(builder: (context)=>Subcategories()));
+                      },
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 0.0,horizontal: 0.0),
+                        child: Text(
+                          product_detail,style: TextStyle(fontFamily: 'Open Sans',
+                            fontWeight: FontWeight.w500,fontSize: 12,color: Colors.black54
+                        ),
+                        ),
                       ),
-                      ),
-                    ),
-
+                    )
                   ],
                 ),
               ),

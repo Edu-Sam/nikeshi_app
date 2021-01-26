@@ -4,6 +4,7 @@ import 'package:nikeshi/pages/home_page_carousel.dart';
 import 'app_utils/app_utils.dart';
 import 'package:nikeshi/pages/categories_expanded_view.dart';
 import 'pages/pages.dart';
+import 'package:nikeshi/widgets/sub_categories.dart';
 
 void main() {
   runApp(
@@ -59,7 +60,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return HomePageCarousel();
-
+   //
   }
 }
 

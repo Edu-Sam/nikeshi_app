@@ -117,7 +117,7 @@ class Footer extends StatelessWidget{
             Center(
               child:Column(
                 children: [
-                  Text("@METRO PAKISTAN \n Designed and Develped by Shopilyv "),
+                  Text("\n Designed and Develped by Shopilyv "),
                 ],
               ),
 
