@@ -136,7 +136,6 @@ class HomePageState extends State<HomePageCarousel> with SingleTickerProviderSta
        //       color: Colors.grey,
 
               child: Footer()
-              /* child: ,*/
             ),
 
 

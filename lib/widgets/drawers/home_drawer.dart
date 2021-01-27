@@ -2,16 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:nikeshi/app_utils/app_utils.dart';
 import 'package:nikeshi/widgets/stanleywidgets/flatmenu_btn.dart';
 import 'package:provider/provider.dart';
+import 'package:nikeshi/models/models.dart';
 
 class HomeDrawer extends StatefulWidget {
-  HomeDrawer({Key key}) : super(key: key);
+  List<Brand> brands;
+  HomeDrawer({Key key,@required this.brands}) : super(key: key);
 
   @override
-  _HomeDrawerState createState() => _HomeDrawerState();
+  _HomeDrawerState createState() => _HomeDrawerState(brands);
 }
 
 class _HomeDrawerState extends State<HomeDrawer> {
   Duration duration = Duration(milliseconds: 700);
+  List<Brand> brands;
+  _HomeDrawerState(this.brands);
 
   @override
   Widget build(BuildContext context) {
@@ -24,18 +28,59 @@ class _HomeDrawerState extends State<HomeDrawer> {
     return Drawer(
       child: AnimatedContainer(
           duration: duration,
-          child: Stack(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ListView(
-                children: [
-                  Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: DrawerHeader(
-                          decoration: BoxDecoration(
-                              color: Theme.of(context).primaryColor,
-                              borderRadius: BorderRadius.circular(10)),
-                          child: Center(
-                              child: Icon(Icons.shop, color: Colors.white)))),
+              Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: DrawerHeader(
+                      decoration: BoxDecoration(
+                          color: Theme.of(context).primaryColor,
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Center(
+                          child: Icon(Icons.shop, color: Colors.white)))),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 5.0,horizontal: 0.0),
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height * 1/2,
+                 // color: Colors.black54,
+                  child: ListView.builder(
+                    itemCount: brands.length,
+                    itemBuilder: (context,index){
+                      return ExpansionTile(
+                          backgroundColor:
+                          appState.dark ? Color(0xFF0b313b) : Colors.grey[100],
+                          title: Row(children: [
+                            Icon(
+                              Icons.food_bank,
+                              color: color,
+                            ),
+                            _sizedWidth,
+                            Text(
+                              brands.elementAt(index).brand,
+                              style: style,
+                            )
+                          ]),
+
+                          children: brands.elementAt(index).categories.map((x){
+                            return FlatMenuBtn(x.name,(){});
+                          }).toList());
+                    },
+
+                  ),
+                ),
+              )
+            ],
+          )),
+    );
+  }
+}
+
+/*
+* children: [
+
                   ExpansionTile(
                       backgroundColor:
                           appState.dark ? Color(0xFF0b313b) : Colors.grey[100],
@@ -52,20 +97,20 @@ class _HomeDrawerState extends State<HomeDrawer> {
                       ]),
                       children: [
                         FlatMenuBtn(
-                          "Fruits and vegetables", 
+                          "Fruits and vegetables",
                           (){}
                         ),
                         FlatMenuBtn(
-                          "Sea foods", 
+                          "Sea foods",
                           (){}
                         ),
                         FlatMenuBtn(
-                          "Meat", 
+                          "Meat",
                           (){}
                         ),
-                      
+
                       ]),
-                  
+
                   ExpansionTile(
                     backgroundColor:
                         appState.dark ? Color(0xFF0b313b) : Colors.grey[100],
@@ -88,19 +133,19 @@ class _HomeDrawerState extends State<HomeDrawer> {
                     ),
                     children: [
                       FlatMenuBtn(
-                          "Frozen Ready To Cook", 
+                          "Frozen Ready To Cook",
                           (){}
                         ),
                       FlatMenuBtn(
-                          "Frozen Fruits And Vegetables", 
+                          "Frozen Fruits And Vegetables",
                           (){}
                         ),
                         FlatMenuBtn(
-                          "Frozen Meat And Seafood", 
+                          "Frozen Meat And Seafood",
                           (){}
                         ),
                         FlatMenuBtn(
-                          "Ice Cream", 
+                          "Ice Cream",
                           (){}
                         ),
                     ],
@@ -125,31 +170,31 @@ class _HomeDrawerState extends State<HomeDrawer> {
                           ),
                         ),
                       ],
-                      
+
                     ),
                     children: [
                       FlatMenuBtn(
-                          "Canned Food", 
+                          "Canned Food",
                           (){}
                         ),
                         FlatMenuBtn(
-                          "Packaged Food", 
+                          "Packaged Food",
                           (){}
                         ),
                         FlatMenuBtn(
-                          "Snacks", 
+                          "Snacks",
                           (){}
                         ),
                         FlatMenuBtn(
-                          "Home Baking", 
+                          "Home Baking",
                           (){}
                         ),
                         FlatMenuBtn(
-                          "Desserts", 
+                          "Desserts",
                           (){}
                         ),
                         FlatMenuBtn(
-                          "Tea And Coffee", 
+                          "Tea And Coffee",
                           (){}
                         ),
                     ]
@@ -216,38 +261,38 @@ class _HomeDrawerState extends State<HomeDrawer> {
                           ),
                         ),
                       ],
-                      
+
                     ),
 
                     children: [
                       FlatMenuBtn(
-                        "Breakfast", 
+                        "Breakfast",
                         (){}
                       ),
                       FlatMenuBtn(
-                        "Butter Margarine", 
+                        "Butter Margarine",
                         (){}
                       ),
                       FlatMenuBtn(
-                        "Cheese and Cream", 
+                        "Cheese and Cream",
                         (){}
                       ),
                       FlatMenuBtn(
-                        "Eggs", 
+                        "Eggs",
                         (){}
                       ),
                       FlatMenuBtn(
-                        "Milk", 
+                        "Milk",
                         (){}
                       ),
                       FlatMenuBtn(
-                        "Yoghurt", 
+                        "Yoghurt",
                         (){}
                       ),
                     ],
                   ),
 
-                   ExpansionTile(
+                  /* ExpansionTile(
                     backgroundColor:
                         appState.dark ? Color(0xFF0b313b) : Colors.grey[100],
                     title: Row(
@@ -266,21 +311,21 @@ class _HomeDrawerState extends State<HomeDrawer> {
                           ),
                         ),
                       ],
-                      
+
                     ),
 
                     children: [
                       FlatMenuBtn(
-                        "Share Nikeshi Mini Market", 
+                        "Share Nikeshi Mini Market",
                         (){}
                       ),
                       FlatMenuBtn(
-                        "Rate us on Play Store", 
+                        "Rate us on Play Store",
                         (){}
                       ),
-                      
+
                     ],
-                  ),
+                  ),*/
 
                   FlatButton(
                 onPressed: () {
@@ -315,9 +360,5 @@ class _HomeDrawerState extends State<HomeDrawer> {
                 ),
               )
                 ],
-              )
-            ],
-          )),
-    );
-  }
-}
+*
+* */
