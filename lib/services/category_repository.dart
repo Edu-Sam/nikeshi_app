@@ -5,32 +5,33 @@ import 'package:nikeshi/models/models.dart';
 import 'package:nikeshi/models/domain_server.dart';
 
 class CategoriesRepository{
-  final String url_fetch_products="${DomainServer.name}shopisoko/productfetch.php";
+  final String url_fetch_categories="${DomainServer.name}shopisoko/categoriesfetch.php";
+  final String url_fetch_categories_by_id="${DomainServer.name}shopisoko/categoriesById.php";
   CategoriesRepository(){
 
   }
 
-  Future<List<Product>> getCategories() async{
+  Future<List<Categories>> getCategories() async{
     final http.Response response =
-    await http.get(url_fetch_products, headers: {"Accept": "application/json"});
+    await http.get(url_fetch_categories, headers: {"Accept": "application/json"});
 
-    var products = jsonDecode(response.body);
-    var list_products = products["products"] as List;
-    List<Product> user_products =
-    list_products.map<Product>((json) => Product.fromJson(json)).toList();
-    return user_products;
+    var categories = jsonDecode(response.body);
+    var list_categories = categories["categories"] as List;
+    List<Categories> user_categories =
+    list_categories.map<Categories>((json) => Categories.fromJson(json)).toList();
+    return user_categories;
   }
 
-  Future<List<Product>> getCategoriesById(String id) async{
+  Future<List<Categories>> getCategoriesById(String id) async{
     final http.Response response=await http.post(
-        url_fetch_products,headers: {"Accept":"application/json"},
+        url_fetch_categories_by_id,headers: {"Accept":"application/json"},
         body: {"id": id}
     );
 
-    var products=jsonDecode(response.body);
-    var list_products=products["products"] as List;
-    List<Product> user_products=list_products.map<Product>((json) => Product.fromJson(json)).toList();
-    return user_products;
+    var categories=jsonDecode(response.body);
+    var list_categories=categories["categories"] as List;
+    List<Categories> user_categories=list_categories.map<Categories>((json) => Categories.fromJson(json)).toList();
+    return user_categories;
   }
 
 

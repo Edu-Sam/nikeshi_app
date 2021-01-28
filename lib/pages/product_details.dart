@@ -1,16 +1,24 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:nikeshi/widgets/product_catalogue.dart';
 import 'package:nikeshi/widgets/footer.dart';
+import 'package:nikeshi/models/models.dart';
+import 'package:provider/provider.dart';
+import  'package:badges/badges.dart';
 
-class OrderDetail extends StatefulWidget{
-     OrderDetail({Key key}):super(key:key);
+
+class ProductDetail extends StatefulWidget{
+     ProductDetail({Key key,@required this.product}):super(key:key);
+     Product product;
 
      @override
-  OrderDetailState createState()=>new OrderDetailState();
+  ProductDetailState createState()=>new ProductDetailState(product);
 }
 
-class OrderDetailState extends State<OrderDetail>{
+class ProductDetailState extends State<ProductDetail>{
   bool is_expanded=false;
+  Product product;
+  ProductDetailState(this.product);
   @override
   Widget build(BuildContext context) {
 
@@ -26,10 +34,11 @@ class OrderDetailState extends State<OrderDetail>{
             onPressed: (){},
             icon:Icon(Icons.search,color: Color.fromRGBO(0,0,139,1),size: 30,),
           ),
-          IconButton(
+           cartComponent(),
+          /*IconButton(
               onPressed: (){},
               icon:Icon(Icons.shopping_cart,color: Color.fromRGBO(0,0,139,1),size:30)
-          ),
+          ),*/
           Builder(
               builder: (context)=>IconButton(
                   onPressed: (){Scaffold.of(context).openEndDrawer();},
@@ -108,8 +117,10 @@ class OrderDetailState extends State<OrderDetail>{
                             MediaQuery.of(context).size.width * 1/6,
                             decoration: BoxDecoration(
                               image: DecorationImage(
-                                  fit: BoxFit.cover,
-                                  image: NetworkImage("https://media.npr.org/assets/news/2010/04/26/groceries_wide-0cf2b0fc41c9b82c329067ffe04d787041c17251.jpg?s=1400")
+                                 // fit: BoxFit.cover,
+                                fit:BoxFit.contain,
+                                  image:NetworkImage(product.image)
+                             //     image: NetworkImage("https://media.npr.org/assets/news/2010/04/26/groceries_wide-0cf2b0fc41c9b82c329067ffe04d787041c17251.jpg?s=1400")
                               ),
                             ),
                           ),
@@ -177,7 +188,7 @@ class OrderDetailState extends State<OrderDetail>{
                           children: [
                             Padding(
                               padding: EdgeInsets.symmetric(vertical: 0.0,horizontal: 0.0),
-                              child: Text('Onions Per 500GM',
+                              child: Text(  'Name: ' + product.name,
                               style: TextStyle(
                                 color: Colors.black54,
                                 fontFamily: 'Open Sans',
@@ -197,7 +208,7 @@ class OrderDetailState extends State<OrderDetail>{
                                       width: 1,
                                       height: 1,
                                       child: Checkbox(
-                                        value: true,
+                                        value: int.parse(product.qty) > 0 ? true : false,
                                         activeColor: Color.fromRGBO(0,0,139,1),
                                         onChanged: (bool newValue){
                                           setState(() {
@@ -230,7 +241,7 @@ class OrderDetailState extends State<OrderDetail>{
                           children: [
                             Padding(
                               padding: EdgeInsets.symmetric(vertical: 0.0,horizontal: 0.0),
-                              child: Text('Ksh 2000',
+                              child: Text("Ksh " + product.price,
                                 style: TextStyle(
                                     color: Color.fromRGBO(0, 0,139,1),
                                     fontFamily: 'Open Sans',
@@ -272,7 +283,11 @@ class OrderDetailState extends State<OrderDetail>{
                         child: Container(
                           width: MediaQuery.of(context).size.width,
                           height: 50,
-                          child: FlatButton.icon(onPressed: (){},
+                          child: FlatButton.icon(onPressed: (){
+                            setState(() {
+                              addToCart(product);
+                            });
+                          },
                               icon: Icon(Icons.shopping_cart,color: Colors.white,size: 30,),
                               label: Text('ADD TO CART',style: TextStyle(
                                 color: Colors.white,fontFamily: 'Open Sans',
@@ -345,7 +360,7 @@ class OrderDetailState extends State<OrderDetail>{
                       Padding(
                         padding: EdgeInsets.only(bottom: 10.0,left: 0.0,right: 0.0),
                         child: Text(
-                          'Name: Onions Per 500GM',
+                          'Name: ' + product.name,
                           style: TextStyle(
                             color: Colors.black54,
                             fontFamily: 'Open Sans',
@@ -409,7 +424,7 @@ class OrderDetailState extends State<OrderDetail>{
                       ),
                     ]
                 ),
-                child: ProductCatalogue(product_header: 'Similar Products',product_detail: '',),
+                child: ProductCatalogue(product_header: 'Similar Products',product_detail: '',category_search: '',),
               ),
               Container(width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).orientation==Orientation.portrait ?
@@ -427,7 +442,7 @@ class OrderDetailState extends State<OrderDetail>{
                       ),
                     ]
                 ),
-                child:ProductCatalogue(product_header: 'Most Sold Items',product_detail: '',),
+                child:ProductCatalogue(product_header: 'Most Sold Items',product_detail: '',category_search: '',),
               ),
               Container(
                 width: MediaQuery.of(context).size.width,
@@ -446,7 +461,7 @@ class OrderDetailState extends State<OrderDetail>{
                       ),
                     ]
                 ),
-                child: ProductCatalogue(product_header: 'Frequently Bought Together',product_detail: '',),
+                child: ProductCatalogue(product_header: 'Frequently Bought Together',product_detail: '',category_search: '',),
               ),
 
 
@@ -470,6 +485,66 @@ class OrderDetailState extends State<OrderDetail>{
           color: Colors.blue,
         ),
       ),
+    );
+  }
+
+  addToCart(Product userProduct){
+   setState(() {
+     CartItemsData cartItemsData=new CartItemsData(orderNo: '0000001',pId: userProduct.id,pName:userProduct.name,
+         price:userProduct.price,image:product.image,quantity: '1');
+     Provider.of<Cart>(context,listen: false).increaseCartSize(cartItemsData);
+     print('The new size is '+ Provider.of<Cart>(context,listen: false).cart_size.toString());
+     //  cart.cart_items_data.add(cartItemsData);
+   });
+
+  }
+
+  Widget cartComponent(){
+    return Stack(
+      children: <Widget>[
+        new IconButton(icon: Icon(
+          Icons.shopping_cart_outlined,size: 30,
+          color: Color.fromRGBO(0,0,139,1),
+        ),
+          onPressed: () {
+            setState(() {
+              //     _navigatorKey.currentState.pushReplacementNamed('/cart_nav');
+            });
+          },),
+        Provider.of<Cart>(context,listen: false).cart_size > 0 ?
+        new Positioned(
+          top: 0.0,
+          right: 0.0,
+          child: new Stack(
+            children: <Widget>[
+              new Container(width: 30, height: 30,),
+              //   new Icon(Icons.brightness_1,size: 20.0,color: Colors.red,),
+              new Positioned(
+                  top: 3.0,
+                  left: 6.0,
+                  child: Badge(
+                    position: BadgePosition.topEnd(
+                        top: 0, end: 3),
+                    badgeColor: Color.fromRGBO(0,0,139,1),
+                    animationDuration: Duration(
+                        milliseconds: 300),
+                    animationType: BadgeAnimationType.slide,
+                    badgeContent: Text('' + Provider
+                        .of<Cart>(context)
+                        .cart_size
+                        .toString(),
+                      style: TextStyle(color: Colors.white,
+                          fontSize: 12.0,
+                          fontWeight: FontWeight.w400),
+                    ),
+                  )
+              )
+            ],
+          ),
+        ): SizedBox(width: 0, height: 0,)
+
+
+      ],
     );
   }
 }

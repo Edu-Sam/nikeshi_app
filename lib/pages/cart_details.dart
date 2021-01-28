@@ -1,8 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:nikeshi/models/models.dart';
+import 'package:badges/badges.dart';
+import 'package:nikeshi/widgets/product_catalogue.dart';
 
 class CartDetails extends StatefulWidget{
-
   CartDetails({Key key}):super(key:key);
 
   @override
@@ -24,10 +27,11 @@ class CartDetailState extends State<CartDetails>{
             onPressed: (){},
             icon:Icon(Icons.search,color: Color.fromRGBO(0,0,139,1),size: 30,),
           ),
-          IconButton(
+         /* IconButton(
             onPressed: (){},
             icon:Icon(Icons.shopping_cart,color: Color.fromRGBO(0,0,139,1),size:30)
-          ),
+          ),*/
+          cartComponent(),
           Builder(
             builder: (context)=>IconButton(
                 onPressed: (){Scaffold.of(context).openEndDrawer();},
@@ -76,97 +80,16 @@ class CartDetailState extends State<CartDetails>{
                  width: MediaQuery.of(context).size.width,
                  height: MediaQuery.of(context).size.height * 3/4,
                 child: ListView.builder(
-                  itemCount: 6,
+                  itemCount: Provider.of<Cart>(context).cart_size,
                   itemBuilder: (context,index){
-                    return Padding(
-                      padding: EdgeInsets.symmetric(vertical: 5.0,horizontal: 0.0),
-                      child: Container(
-                          width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.height * 1/6,
-
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 0.0,right: 0.0,top: 10.0),
-                            child:  Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 0.0,horizontal: 20.0),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Expanded(
-                                      flex: 3,
-                                      child: Container(
-                                        child: Row(
-                                          children: [
-                                            Container(
-                                              margin: EdgeInsets.only(right: 8, left: 8, top: 8, bottom: 8),
-                                              width: 80,
-                                              height: 80,
-                                              decoration: BoxDecoration(
-                                                  borderRadius: BorderRadius.all(Radius.circular(14)),
-                                                  color: Colors.blue.shade200,
-                                                  image: DecorationImage(
-                                                      image: AssetImage("images/bag_1.png"))),
-                                            ),
-                                            Column(
-                                              children: [
-                                                Padding(
-                                                  padding: EdgeInsets.symmetric(vertical: 1.0,horizontal: 0.0),
-                                                  child: Text('Metro Reusable Bag Medium',
-                                                    style:TextStyle(
-                                                        color: Color.fromRGBO(0,0,139,1),
-                                                      fontFamily: 'Open Sans',
-                                                      fontWeight: FontWeight.w400,
-                                                      fontSize: 14
-                                                    ),),
-                                                ),
-                                                Padding(
-                                                  padding: EdgeInsets.symmetric(vertical: 1.0,horizontal: 0.0),
-                                                  child: Text('Ksh 2000',style:TextStyle(
-                                                      color: Color.fromRGBO(0,0,139,1),
-                                                      fontFamily: 'Open Sans',
-                                                      fontWeight: FontWeight.w400,
-                                                      fontSize: 14
-                                                  ),),
-                                                )
-                                              ],
-                                            )
-                                          ],
-                                        ),
-                                      )
-                                  )
-                                      ,
-                                      Padding(
-                                        padding: EdgeInsets.symmetric(vertical: 0.0,horizontal: 0.0),
-                                        child: Text("Ksh 2000",style:TextStyle(
-                                            color: Color.fromRGBO(0,0,139,1),
-                                            fontFamily: 'Open Sans',
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 14
-                                        ),),
-                                      )
-                                    ],
-                                  ),
-                                ),
-
-                                Align(
-                                  alignment: Alignment.bottomCenter,
-                                  child: Divider(),
-                                )
-                              ],
-                            ),
-                          )
-                      ),
-                    );
+                   return createCartItems(Provider.of<Cart>(context).cart_items_data.elementAt(index), index);
                   },
                 ),
               ),
 
               Container(
                 width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height * 6/7,
+                height: MediaQuery.of(context).size.height * 4/7,
 
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -199,7 +122,7 @@ class CartDetailState extends State<CartDetails>{
                                         fontWeight: FontWeight.w400,fontSize: 14,fontFamily: 'Open Sans'),),
                                   ),
                                   Padding(padding: EdgeInsets.symmetric(vertical: 0.0,horizontal: 0.0),
-                                    child: Text('Ksh 2000',style: TextStyle(color: Colors.black54,
+                                    child: Text('Ksh ' + Provider.of<Cart>(context,listen: false).calculateTotal().toString(),style: TextStyle(color: Colors.black54,
                                         fontWeight: FontWeight.w400,fontSize: 14,fontFamily: 'Open Sans'),),
                                   )
                                 ],
@@ -316,7 +239,7 @@ class CartDetailState extends State<CartDetails>{
                       ),
                     ),
 
-                    Padding(
+                    /*Padding(
                       padding: EdgeInsets.symmetric(vertical: 5.0,horizontal: 0.0),
                       child: Container(
                         width: MediaQuery.of(context).size.width,
@@ -427,16 +350,214 @@ class CartDetailState extends State<CartDetails>{
                           ],
                         ),
                       ),
-                    )
+                    )*/
 
                   ],
                 ),
-              )
+              ),
+              Container(
+                color: Colors.white,
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).orientation==Orientation.portrait ?
+                MediaQuery.of(context).size.height * 6/11 :
+                MediaQuery.of(context).size.width * 6/11,
+                child: ProductCatalogue(product_header:'Top Selling Items',product_detail: '',category_search: '',),
+              ),
             ],
           ),
         ),
       ),
     );
+  }
+  
+  Widget createCartItems(CartItemsData data,int index){
+    return  Padding(
+      padding: EdgeInsets.symmetric(vertical: 0.0,horizontal: 0.0),
+      child: Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height * 3/14,
+
+          child: Padding(
+            padding: EdgeInsets.only(left: 0.0,right: 0.0,top: 10.0),
+            child:  Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 0.0,horizontal: 20.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                          flex: 3,
+                          child: Container(
+                            child: Row(
+                              children: [
+                                Container(
+
+                                  child: Column(
+                                    children: [
+                                      IconButton(
+                                        icon: Icon(Icons.keyboard_arrow_up_sharp,size:30,color: Color.fromRGBO(0,0,139,1),),
+                                        onPressed: (){
+                                          addQuantity(data);
+                                        },
+                                      ),
+
+                                      IconButton(
+                                        icon: Icon(Icons.delete,size: 30,color: Color.fromRGBO(0,0,139,1),),
+                                        onPressed: (){
+                                          setState(() {
+                                            removeItem(index);
+                                          });
+                                        },
+                                      ),
+                                      IconButton(
+                                        icon: Icon(Icons.keyboard_arrow_down_sharp,color: Color.fromRGBO(0,0,139,1)),
+                                        onPressed: (){
+                                          subtractQuantity(data);
+                                        },
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                //  margin: EdgeInsets.only(right: 8, left: 8, top: 8, bottom: 8),
+                                  width: 100,
+                                  height: 100,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.all(Radius.circular(14)),
+                                      //              color: Colors.blue.shade200,
+                                      image: DecorationImage(
+                                          fit: BoxFit.cover,
+                                          image: NetworkImage(Provider.of<Cart>(context,listen: false).cart_items_data.elementAt(index).image))),
+                                ),
+                                Column(
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.symmetric(vertical: 1.0,horizontal: 0.0),
+                                      child: Text(Provider.of<Cart>(context,listen: false).cart_items_data.elementAt(index).pName,
+                                        style:TextStyle(
+                                            color: Color.fromRGBO(0,0,139,1),
+                                            fontFamily: 'Open Sans',
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 14
+                                        ),),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.symmetric(vertical: 1.0,horizontal: 0.0),
+                                      child: Text('Ksh ' + Provider.of<Cart>(context).cart_items_data.elementAt(index).price,style:TextStyle(
+                                          color: Color.fromRGBO(0,0,139,1),
+                                          fontFamily: 'Open Sans',
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 14
+                                      ),),
+                                    )
+                                  ],
+                                )
+                              ],
+                            ),
+                          )
+                      )
+                      ,
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: 0.0,horizontal: 0.0),
+                        child: Text("Ksh " + Provider.of<Cart>(context,listen: false).calculateLineTotal(data).toString(),style:TextStyle(
+                            color: Color.fromRGBO(0,0,139,1),
+                            fontFamily: 'Open Sans',
+                            fontWeight: FontWeight.w400,
+                            fontSize: 14
+                        ),),
+                      )
+                    ],
+                  ),
+                ),
+
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Divider(),
+                )
+              ],
+            ),
+          )
+      ),
+    );
+  }
+
+  Widget cartComponent(){
+    return Stack(
+      children: <Widget>[
+        new IconButton(icon: Icon(
+          Icons.shopping_cart_outlined,size: 30,
+          color: Color.fromRGBO(0,0,139,1),
+        ),
+          onPressed: () {
+            setState(() {
+              //     _navigatorKey.currentState.pushReplacementNamed('/cart_nav');
+            });
+          },),
+        Provider.of<Cart>(context,listen: false).cart_size > 0 ?
+        new Positioned(
+          top: 0.0,
+          right: 0.0,
+          child: new Stack(
+            children: <Widget>[
+              new Container(width: 30, height: 30,),
+              //   new Icon(Icons.brightness_1,size: 20.0,color: Colors.red,),
+              new Positioned(
+                  top: 3.0,
+                  left: 6.0,
+                  child: Badge(
+                    position: BadgePosition.topEnd(
+                        top: 0, end: 3),
+                    badgeColor: Color.fromRGBO(0,0,139,1),
+                    animationDuration: Duration(
+                        milliseconds: 300),
+                    animationType: BadgeAnimationType.slide,
+                    badgeContent: Text('' + Provider
+                        .of<Cart>(context)
+                        .cart_size
+                        .toString(),
+                      style: TextStyle(color: Colors.white,
+                          fontSize: 12.0,
+                          fontWeight: FontWeight.w400),
+                    ),
+                  )
+              )
+            ],
+          ),
+        ): SizedBox(width: 0, height: 0,)
+
+
+      ],
+    );
+  }
+
+  void removeItem(int current_index){
+    setState(() {
+      Provider.of<Cart>(context,listen:false).removeItem(current_index);
+      Provider.of<Cart>(context,listen: false).cart_size--;
+    });
+  }
+
+  void addQuantity(CartItemsData data){
+    String temp_quantity=data.quantity;
+    int new_quantity=int.parse(temp_quantity);
+    new_quantity++;
+    setState((){
+      data.quantity=new_quantity.toString();
+    });
+  }
+
+  void subtractQuantity(CartItemsData data){
+    String temp_quantity=data.quantity;
+    int new_quantity=int.parse(temp_quantity);
+    if(new_quantity > 0){
+      new_quantity--;
+      setState(() {
+        data.quantity=new_quantity.toString();
+      });
+    }
   }
 
 /*

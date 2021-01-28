@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:nikeshi/services/category_repository.dart';
 import 'package:provider/provider.dart';
 import 'package:nikeshi/pages/home_page_carousel.dart';
 import 'app_utils/app_utils.dart';
@@ -13,14 +15,12 @@ import 'package:nikeshi/widgets/footer.dart';
 import 'package:nikeshi/widgets/categories_view.dart';
 import 'package:nikeshi/widgets/drawers/home_drawer.dart';
 import 'package:nikeshi/widgets/custom_carousels.dart';
+import 'package:badges/badges.dart';
 
 void main() {
   runApp(
-    MultiProvider(providers: [
-      ChangeNotifierProvider.value(value: AppState(),)
-    ],
-    child: MyApp()
-    )
+    MyApp(),
+    // PushMessagingExample()
   );
 }
 
@@ -28,13 +28,17 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MultiProvider(providers: [
+      ChangeNotifierProvider.value(value: AppState(),),
+      ChangeNotifierProvider(create: (_)=> Cart(cart_id: 0,cart_size: 0,total_amount: 0,cart_items_data: []),),
+    ],
+    child: MaterialApp(
         title: 'Nikeshi Mini Market',
         theme: ThemeData(
           primaryColor: Colors.blue,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        home: MyHomePage());
+        home: MyHomePage()),);
   }
 }
 
@@ -51,12 +55,17 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   Future<List<Brand>> future_brands;
+  Future<List<Categories>> future_categories;
+  List<Categories> initial_categories=[];
   BrandsRepository brandsRepository=new BrandsRepository();
+  CategoriesRepository categoriesRepository=new CategoriesRepository();
   @override
   void initState() {
 
     super.initState();
-    future_brands=brandsRepository.getBrands();
+    getBrands();
+    future_categories=this.getCategories();
+   // future_brands=brandsRepository.getBrands();
   }
 
   @override
@@ -70,12 +79,19 @@ class _MyHomePageState extends State<MyHomePage> {
     return FutureBuilder(
       future: future_brands,
       builder: (context,snapshot){
-        if(snapshot.hasData){
+        if(snapshot.connectionState==ConnectionState.done && snapshot.hasData){
           List<Brand> userBrands=snapshot.data;
+          print('The brands are ' + userBrands.elementAt(0).brand);
           return homePageCarousel1(userBrands);
         }
         else if(snapshot.hasError){
           return Container();
+        }
+
+        else if(snapshot.connectionState==ConnectionState.waiting){
+          return Container(
+            child: Text('WAITING'),
+          );
         }
 
         else{
@@ -90,10 +106,10 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: Text("Metro Online", style: TextStyle(
+        title: Text("Shopi Soko", style: TextStyle(
             color: Color.fromRGBO(0,0,139,1),
             fontSize: 15,
-            fontFamily: 'Metro Online',
+            fontFamily: 'Open Sans',
             fontWeight: FontWeight.w700
         ),
         ),
@@ -102,11 +118,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
           Icon(Icons.search, size: 30,),
 
-          IconButton(
+          /*IconButton(
               onPressed: (){
                 Navigator.push(context,MaterialPageRoute(builder: (context)=>CartDetails()));
               },
-              icon:Icon(Icons.shopping_cart,size: 30,)),
+              icon:Icon(Icons.shopping_cart,size: 30,)),*/
+          cartComponent(),
 
           Icon(Icons.more_vert,size: 30)
         ],
@@ -130,7 +147,7 @@ class _MyHomePageState extends State<MyHomePage> {
               height: MediaQuery.of(context).orientation==Orientation.portrait ?
               MediaQuery.of(context).size.height * 6/11 :
               MediaQuery.of(context).size.width * 6/11,
-              child: ProductCatalogue(product_header:'metro post',product_detail: '',),
+              child: ProductCatalogue(product_header:'Our Products',product_detail: '',category_search: '',),
             ),
             Padding(
               padding: const EdgeInsets.only(left: 20.0, right: 20.0),
@@ -155,18 +172,48 @@ class _MyHomePageState extends State<MyHomePage> {
                 ],
               ),
             ),
-            CategoriesView(),
+            CategoriesView(userCategories: initial_categories,),
             Container(
               color: Colors.white,
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).orientation==Orientation.portrait ?
               MediaQuery.of(context).size.height * 6/11 :
               MediaQuery.of(context).size.width * 6/11,
-              child: ProductCatalogue(product_header:'Metro Post',product_detail: 'View all',),
+              child: ProductCatalogue(product_header:'Our Products',product_detail: 'View all',category_search: '',),
             ),
 
-            CategoriesView(),
-            Container(
+            CategoriesView(userCategories: initial_categories,),
+            FutureBuilder(
+                future: future_categories,
+                builder: (context,snapshot){
+                  if(snapshot.hasData){
+                  List<Categories>  new_categories=snapshot.data;
+                  print('The first item is ' + new_categories.elementAt(0).id);
+                    return  Column(
+                        children: new_categories.map((category){
+                         return Container(
+                            color: Colors.white,
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context).orientation==Orientation.portrait ?
+                            MediaQuery.of(context).size.height * 6/11 :
+                            MediaQuery.of(context).size.width * 6/11,
+                            child: ProductCatalogue(product_header:category.name,product_detail:'View all',
+                            category_search: category.id,),
+                          );
+                        }).toList()
+                    );
+                  }
+                  else if(snapshot.hasError){
+                    return Container(
+                      child: Text('Error found' + snapshot.error.toString()),
+                    );
+                  }
+
+                  else{
+                    return Container();
+                  }
+                }),
+      /*      Container(
               color: Colors.white,
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).orientation==Orientation.portrait ?
@@ -181,7 +228,7 @@ class _MyHomePageState extends State<MyHomePage> {
               MediaQuery.of(context).size.height * 6/11 :
               MediaQuery.of(context).size.width * 6/11,
               child: ProductCatalogue(product_header:'Skin Care',product_detail:'view all'),
-            ),
+            ),*/
 
 
             Container(
@@ -204,8 +251,69 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Future<List<Categories>> fetchBrandsAndCategories() async{
+  Future<List<Brand>> getBrands() async{
 
+    future_brands=brandsRepository.getBrands().then((value) async{
+      initial_categories=await getCategories();
+      return value;
+    });
+
+    return future_brands;
+  }
+
+  Future<List<Categories>> getCategories() async{
+   // Future<List<Categories>> user_categories=categoriesRepository.getCategories();
+    Future<List<Categories>> user_categories=categoriesRepository.getCategories();
+    return user_categories;
+  }
+
+  Widget cartComponent(){
+    return Stack(
+      children: <Widget>[
+        new IconButton(icon: Icon(
+          Icons.shopping_cart_outlined,size: 30,
+          color: Color.fromRGBO(0,0,139,1),
+          ),
+          onPressed: () {
+            setState(() {
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>CartDetails()));
+            });
+          },),
+         Provider.of<Cart>(context).cart_size > 0 ?
+         new Positioned(
+           top: 0.0,
+           right: 0.0,
+           child: new Stack(
+             children: <Widget>[
+               new Container(width: 30, height: 30,),
+               //   new Icon(Icons.brightness_1,size: 20.0,color: Colors.red,),
+               new Positioned(
+                   top: 3.0,
+                   left: 6.0,
+                   child: Badge(
+                     position: BadgePosition.topEnd(
+                         top: 0, end: 3),
+                     badgeColor: Color.fromRGBO(0,0,139,1),
+                     animationDuration: Duration(
+                         milliseconds: 300),
+                     animationType: BadgeAnimationType.slide,
+                     badgeContent: Text('' + Provider
+                         .of<Cart>(context)
+                         .cart_size
+                         .toString(),
+                       style: TextStyle(color: Colors.white,
+                           fontSize: 12.0,
+                           fontWeight: FontWeight.w400),
+                     ),
+                   )
+               )
+             ],
+           ),
+         ): SizedBox(width: 0, height: 0,)
+
+
+      ],
+    );
   }
 }
 

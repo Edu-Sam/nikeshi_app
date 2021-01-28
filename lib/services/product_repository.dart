@@ -6,6 +6,7 @@ import 'dart:convert';
 
 class ProductRepository{
 final String url_fetch_products="${DomainServer.name}shopisoko/productfetch.php";
+final String url_fetch_products_by_category="${DomainServer.name}shopisoko/productsByCategory.php";
   ProductRepository(){
 
   }
@@ -32,6 +33,19 @@ final String url_fetch_products="${DomainServer.name}shopisoko/productfetch.php"
     List<Product> user_products=list_products.map<Product>((json) => Product.fromJson(json)).toList();
     return user_products;
   }
+
+Future<List<Product>> getProductByCategory(int id) async{
+  final http.Response response=await http.post(
+      url_fetch_products_by_category,headers: {"Accept":"application/json"},
+      body: {"id":id.toString()}
+  );
+
+  var products=jsonDecode(response.body);
+  var list_products=products["products"] as List;
+  List<Product> user_products=list_products.map<Product>((json) => Product.fromJson(json)).toList();
+  return user_products;
+}
+
 
 
 }

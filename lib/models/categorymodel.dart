@@ -12,18 +12,22 @@ class Categories {
     Categories({
         this.id,
         this.name,
+        this.image
     });
 
     String id;
     String name;
+    String image;
 
     factory Categories.fromJson(Map<String, dynamic> json) => Categories(
         id: json["id"],
         name: json["name"],
+        image: json["image"]
     );
 
     Map<String, dynamic> toJson() => {
         "id": id,
         "name": name,
+        "image":image
     };
 }
