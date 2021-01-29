@@ -7,6 +7,7 @@ import 'package:nikeshi/models/domain_server.dart';
 class CategoriesRepository{
   final String url_fetch_categories="${DomainServer.name}shopisoko/categoriesfetch.php";
   final String url_fetch_categories_by_id="${DomainServer.name}shopisoko/categoriesById.php";
+  final String url_fetch_category_by_id="${DomainServer.name}shopisoko/fetchCategoryById.php";
   CategoriesRepository(){
 
   }
@@ -25,6 +26,18 @@ class CategoriesRepository{
   Future<List<Categories>> getCategoriesById(String id) async{
     final http.Response response=await http.post(
         url_fetch_categories_by_id,headers: {"Accept":"application/json"},
+        body: {"id": id}
+    );
+
+    var categories=jsonDecode(response.body);
+    var list_categories=categories["categories"] as List;
+    List<Categories> user_categories=list_categories.map<Categories>((json) => Categories.fromJson(json)).toList();
+    return user_categories;
+  }
+
+  Future<List<Categories>> getCategoryById(String id) async{
+    final http.Response response=await http.post(
+        url_fetch_category_by_id,headers: {"Accept":"application/json"},
         body: {"id": id}
     );
 

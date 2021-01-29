@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:nikeshi/models/models.dart';
 import 'package:badges/badges.dart';
 import 'package:nikeshi/widgets/product_catalogue.dart';
+import 'package:nikeshi/pages/checkout_page.dart';
 
 class CartDetails extends StatefulWidget{
   CartDetails({Key key}):super(key:key);
@@ -196,7 +197,10 @@ class CartDetailState extends State<CartDetails>{
                                 width: MediaQuery.of(context).size.width,
                                 height: 50,
                                 child: FlatButton(
-                                  onPressed: (){},
+                                  onPressed: (){
+                                    Navigator.push(context,MaterialPageRoute(builder: (context)=>CheckoutPage()));
+
+                                  },
                                   child: Text("Checkout",style: TextStyle(color: Colors.white,fontFamily: 'Open Sans',
                                       fontWeight: FontWeight.w600
                                   ),),

@@ -8,33 +8,34 @@ import 'package:nikeshi/widgets/sub_categories.dart';
 import 'package:nikeshi/models/models.dart';
 import 'package:nikeshi/services/product_repository.dart';
 import 'package:provider/provider.dart';
+import 'package:nikeshi/pages/categories_expanded_view.dart';
 
-class ProductCatalogue extends StatefulWidget{
+class ProductCatalogueSub extends StatefulWidget{
   String product_header;
   String product_detail;
-  String category_search;
-  ProductCatalogue({Key key,@required this.product_header,@required this.product_detail,
-       @required this.category_search}):super(key:key);
+  String sub_category_search;
+  ProductCatalogueSub({Key key,@required this.product_header,@required this.product_detail,
+    @required this.sub_category_search}):super(key:key);
 
   @override
-  ProductCatalogueState createState()=> new ProductCatalogueState(product_header,product_detail,
-                                               category_search);
+  ProductCatalogueSubState createState()=> new ProductCatalogueSubState(product_header,product_detail,
+      sub_category_search);
 }
 
-class ProductCatalogueState extends State<ProductCatalogue>{
+class ProductCatalogueSubState extends State<ProductCatalogueSub>{
   String product_header;
   String product_detail;
-  String category_search;
+  String sub_category_search;
   Future<List<Brand>> future_brands;
   Future<List<Product>> future_product;
   ProductRepository product_repository=new ProductRepository();
 
 
 
-   ProductCatalogueState(this.product_header,this.product_detail,this.category_search);
-   @override
-   void initState() {
-     this.future_product=this.getProducts();
+  ProductCatalogueSubState(this.product_header,this.product_detail,this.sub_category_search);
+  @override
+  void initState() {
+    this.future_product=this.getProducts();
     super.initState();
   }
   @override
@@ -66,8 +67,11 @@ class ProductCatalogueState extends State<ProductCatalogue>{
                         ),
                         GestureDetector(
                           onTap: (){
-                            print('The id is ' + category_search);
-                            Navigator.push(context,MaterialPageRoute(builder: (context)=>Subcategories(category_id: int.parse(category_search))));
+                            print('The id is ' + product_detail);
+                            if(product_detail.isNotEmpty){
+                              Navigator.push(context,MaterialPageRoute(builder: (context)=>CategoriesExpandedView(category_search: sub_category_search,)));
+                            }
+
                           },
                           child: Padding(
                             padding: EdgeInsets.symmetric(vertical: 0.0,horizontal: 0.0),
@@ -141,9 +145,8 @@ class ProductCatalogueState extends State<ProductCatalogue>{
                                                       child: Row(
                                                         //  mainAxisAlignment: MainAxisAlignment.center,
                                                         children: [
-                                                          int.parse(user_products.elementAt(index).qty) > 0 ?
                                                           SaleChevron(
-                                                          ) : SizedBox()
+                                                          )
                                                         ],
                                                       ),
                                                     ),
@@ -168,9 +171,9 @@ class ProductCatalogueState extends State<ProductCatalogue>{
                                                       padding: EdgeInsets.symmetric(vertical: 5.0,horizontal: 0.0),
                                                       child: OfferContainer(),
                                                     ): Padding(
-                                                  padding: EdgeInsets.symmetric(vertical: 5.0,horizontal: 0.0),
-                                                  child: SoldOutContainer(),
-                                                ),
+                                                      padding: EdgeInsets.symmetric(vertical: 5.0,horizontal: 0.0),
+                                                      child: SoldOutContainer(),
+                                                    ),
                                                     Padding(
                                                       padding: EdgeInsets.symmetric(vertical: 5.0,horizontal: 0.0),
                                                       child: Wrap(
@@ -265,25 +268,25 @@ class ProductCatalogueState extends State<ProductCatalogue>{
   }
 
   Future<List<Product>> getProducts() async{
-   if(category_search==''){
-     Future<List<Product>> user_products=product_repository.getProducts();
-     return user_products;
-   }
-   
-   else{
-     print('category search is ' + category_search);
-     int category_search_id=int.parse(category_search);
-     Future<List<Product>> user_products=product_repository.getProductByCategory(category_search_id);
-     return user_products;
-   }
+    if(sub_category_search==''){
+      Future<List<Product>> user_products=product_repository.getProducts();
+      return user_products;
+    }
+
+    else{
+      print('category search is ' + sub_category_search);
+      int category_search_id=int.parse(sub_category_search);
+      Future<List<Product>> user_products=product_repository.getProductByCategorySub(category_search_id);
+      return user_products;
+    }
   }
 
   addToCart(Product userProduct){
 
-      CartItemsData cartItemsData=new CartItemsData(orderNo: '0000001',pId: userProduct.id,pName:userProduct.name,
-          price:userProduct.price,image:userProduct.image,quantity: '1');
-      Provider.of<Cart>(context,listen: false).increaseCartSize(cartItemsData);
-      print('The new size is '+ Provider.of<Cart>(context,listen: false).cart_size.toString());
+    CartItemsData cartItemsData=new CartItemsData(orderNo: '0000001',pId: userProduct.id,pName:userProduct.name,
+        price:userProduct.price,image:userProduct.image,quantity: '1');
+    Provider.of<Cart>(context,listen: false).increaseCartSize(cartItemsData);
+    print('The new size is '+ Provider.of<Cart>(context,listen: false).cart_size.toString());
 
     //  cart.cart_items_data.add(cartItemsData);
 

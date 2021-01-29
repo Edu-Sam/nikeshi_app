@@ -4,9 +4,9 @@
 
 import 'dart:convert';
 
-SubCategories subcategoriesFromJson(String str) => SubCategories.fromJson(json.decode(str));
+//SubCategories subcategoriesFromJson(String str) => SubCategories.fromJson(json.decode(str));
 
-String subcategoriesToJson(SubCategories data) => json.encode(data.toJson());
+//String subcategoriesToJson(SubCategories data) => json.encode(data.toJson());
 
 class SubCategories {
     SubCategories({
@@ -22,9 +22,9 @@ class SubCategories {
     String image;
 
     factory SubCategories.fromJson(Map<String, dynamic> json) => SubCategories(
-        id: json["id"],
+        id: int.parse(json["id"]),
         subcategory: json["subcategory"],
-        cat_id: json['cat_id'],
+        cat_id: int.parse(json['cat_id']),
         image: json['image']
     );
 

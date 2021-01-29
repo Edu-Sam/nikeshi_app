@@ -1,14 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:nikeshi/widgets/sale_chevron.dart';
+import 'package:nikeshi/models/models.dart';
+import 'package:provider/provider.dart';
+import 'package:nikeshi/services/product_repository.dart';
 
 class CategoriesListView extends StatefulWidget{
-  CategoriesListView({Key key}):super(key: key);
+  CategoriesListView({Key key,@required this.products}):super(key: key);
+  List<Product> products;
 
   @override
-  CategoriesListState createState()=> CategoriesListState();
+  CategoriesListState createState()=> CategoriesListState(products);
 }
 
 class CategoriesListState extends State<CategoriesListView>{
+  ProductRepository product_repository=new ProductRepository();
+  Future<List<Product>> future_product;
+  List<Product> products;
+
+  String category_search;
+
+  CategoriesListState(this.products);
+
+
+  @override
+  void initState() {
+  //  this.future_product=this.getProducts();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +40,7 @@ class CategoriesListState extends State<CategoriesListView>{
         MediaQuery.of(context).size.width ,
         //    color: Colors.red,
         child: ListView.builder(
-          itemCount: 10,
+          itemCount: products.length,
           itemBuilder: (context,index){
             return
               Container(
@@ -53,9 +71,9 @@ class CategoriesListState extends State<CategoriesListView>{
                                   height: 250,
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.all(Radius.circular(14)),
-                                      color: Colors.blue.shade200,
+                                    //  color: Colors.blue.shade200,
                                       image: DecorationImage(
-                                          image: AssetImage("images/bag_1.png"))),
+                                          image: NetworkImage(products.elementAt(index).image))),
                                 ),),
                             ),
                             Align(
@@ -90,7 +108,7 @@ class CategoriesListState extends State<CategoriesListView>{
                                 padding: EdgeInsets.symmetric(vertical: 5.0,horizontal: 0.0),
                                 child: Wrap(
                                   children: [
-                                    Text('Cardbury Perk 5.9 GM X24',style: TextStyle(
+                                    Text(products.elementAt(index).name,style: TextStyle(
                                         fontWeight: FontWeight.w400,
                                         color: Colors.black54,
                                         fontSize: 11
@@ -103,7 +121,7 @@ class CategoriesListState extends State<CategoriesListView>{
                                 padding: EdgeInsets.symmetric(vertical: 0.0,horizontal: 0.0),
                                 child: Wrap(
                                   children: [
-                                    Text("Ksh 1000",style: TextStyle(
+                                    Text("Ksh " + products.elementAt(index).price,style: TextStyle(
                                         fontWeight: FontWeight.w400,fontSize: 8,
                                         color: Colors.black,fontFamily: 'Open Sans'
                                     ),)
@@ -118,7 +136,11 @@ class CategoriesListState extends State<CategoriesListView>{
                                     height: 50,
                                     // color: Colors.red,
                                     child: FlatButton.icon(
-                                      onPressed: (){},
+                                      onPressed: (){
+                                        setState(() {
+                                          addToCart(products.elementAt(index));
+                                        });
+                                      },
                                       icon: Icon(Icons.shopping_cart,color: Colors.white,size: 16,),
                                       label: Text('ADD TO CART',style: TextStyle(
                                           color: Colors.white,fontFamily: 'Open Sans',
@@ -141,5 +163,30 @@ class CategoriesListState extends State<CategoriesListView>{
         ),
       ),
     );
+  }
+
+  Future<List<Product>> getProducts() async{
+    if(category_search==''){
+      Future<List<Product>> user_products=product_repository.getProducts();
+      return user_products;
+    }
+
+    else{
+      print('category search is ' + category_search);
+      int category_search_id=int.parse(category_search);
+      Future<List<Product>> user_products=product_repository.getProductByCategorySub(category_search_id);
+      return user_products;
+    }
+  }
+
+  addToCart(Product userProduct){
+
+    CartItemsData cartItemsData=new CartItemsData(orderNo: '0000001',pId: userProduct.id,pName:userProduct.name,
+        price:userProduct.price,image:userProduct.image,quantity: '1');
+    Provider.of<Cart>(context,listen: false).increaseCartSize(cartItemsData);
+    print('The new size is '+ Provider.of<Cart>(context,listen: false).cart_size.toString());
+
+    //  cart.cart_items_data.add(cartItemsData);
+
   }
 }

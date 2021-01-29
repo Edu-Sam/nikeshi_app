@@ -1,15 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:nikeshi/widgets/sale_chevron.dart';
+import 'package:nikeshi/models/models.dart';
+import 'package:provider/provider.dart';
+import 'package:nikeshi/services/product_repository.dart';
+
 
 class CategoriesDetailedView extends StatefulWidget{
-  CategoriesDetailedView({Key key}):super(key: key);
+  CategoriesDetailedView({Key key,@required this.products}):super(key: key);
+  List<Product> products;
 
   @override
-  CategoriesDetailedState createState()=> CategoriesDetailedState();
+  CategoriesDetailedState createState()=> CategoriesDetailedState(this.products);
 }
 
 class CategoriesDetailedState extends State<CategoriesDetailedView>{
 
+  ProductRepository product_repository=new ProductRepository();
+ // Future<List<Product>> future_product;
+  List<Product> products;
+
+  String category_search;
+
+  CategoriesDetailedState(this.products);
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -22,7 +34,7 @@ class CategoriesDetailedState extends State<CategoriesDetailedView>{
         MediaQuery.of(context).size.width ,
         //    color: Colors.red,
         child: ListView.builder(
-          itemCount: 10,
+          itemCount: products.length,
           itemBuilder: (context,index){
             return
               Container(
@@ -47,9 +59,9 @@ class CategoriesDetailedState extends State<CategoriesDetailedView>{
                             height: 80,
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.all(Radius.circular(14)),
-                                color: Colors.blue.shade200,
+                                //color: Colors.blue.shade200,
                                 image: DecorationImage(
-                                    image: AssetImage("images/bag_1.png"))),
+                                    image: NetworkImage(products.elementAt(index).image))),
                           ),),
 
                         Padding(
@@ -60,14 +72,14 @@ class CategoriesDetailedState extends State<CategoriesDetailedView>{
                             children: [
                               Padding(
                                 padding: EdgeInsets.symmetric(vertical: 3.0,horizontal: 1.0),
-                                child: Text('Banana Per Dozen',style: TextStyle(
+                                child: Text(products.elementAt(index).name,style: TextStyle(
                                   color: Colors.black87,fontFamily: 'Open Sans',
                                   fontWeight: FontWeight.w400,fontSize: 14
                                 ),),
                               ),
                               Padding(
                                 padding: EdgeInsets.symmetric(vertical: 3.0,horizontal: 1.0),
-                                child: Text('Ksh 1000',style: TextStyle(
+                                child: Text('Ksh ' + products.elementAt(index).price,style: TextStyle(
                                     color: Colors.black87,fontFamily: 'Open Sans',
                                     fontWeight: FontWeight.w400,fontSize: 12
                                 ),),
@@ -79,7 +91,11 @@ class CategoriesDetailedState extends State<CategoriesDetailedView>{
                                   height: 40,
                                   // color: Colors.red,
                                   child: FlatButton.icon(
-                                    onPressed: (){},
+                                    onPressed: (){
+                                     setState(() {
+                                       addToCart(products.elementAt(index));
+                                     });
+                                    },
                                     icon: Icon(Icons.shopping_cart,color: Colors.white,size: 16,),
                                     label: Text('ADD TO CART',style: TextStyle(
                                         color: Colors.white,fontFamily: 'Open Sans',
@@ -104,6 +120,17 @@ class CategoriesDetailedState extends State<CategoriesDetailedView>{
         ),
       ),
     );
+  }
+
+  addToCart(Product userProduct){
+
+    CartItemsData cartItemsData=new CartItemsData(orderNo: '0000001',pId: userProduct.id,pName:userProduct.name,
+        price:userProduct.price,image:userProduct.image,quantity: '1');
+    Provider.of<Cart>(context,listen: false).increaseCartSize(cartItemsData);
+    print('The new size is '+ Provider.of<Cart>(context,listen: false).cart_size.toString());
+
+    //  cart.cart_items_data.add(cartItemsData);
+
   }
 }
 
